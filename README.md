@@ -1,5 +1,8 @@
 # CatSeedLogin 猫种子登陆
 > 插件在Spigot API 1.13.2环境下开发的， 理论上应该支持1.7 ~ 1.18.1 一般都是低版本向上兼容。
+## 关于此Fork:
+* 此 Fork 修复了 CatSeedLogin 的一些问题,添加了基岩版兼容
+* 并且合并了几个未合并的 Pull requests [#19](https://github.com/CatSeed/CatSeedLogin/pull/19) [#18](https://github.com/CatSeed/CatSeedLogin/pull/18)
 ## 基础功能:
 *  注册 登录 修改密码 管理员设置密码
 *  防止英文id大小写登录bug

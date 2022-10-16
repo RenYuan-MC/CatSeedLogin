@@ -75,6 +75,7 @@ public class Config {
         public static int IpCountLimit;
         public static Location SpawnLocation;
         public static boolean LimitChineseID;
+        public static boolean BedrockLoginBypass;
         public static int MaxLengthID;
         public static int MinLengthID;
         public static boolean BeforeLoginNoDamage;
@@ -93,6 +94,7 @@ public class Config {
             IpRegisterCountLimit = config.getInt("IpRegisterCountLimit", resourceConfig.getInt("IpRegisterCountLimit"));
             IpCountLimit = config.getInt("IpCountLimit", resourceConfig.getInt("IpCountLimit"));
             LimitChineseID = config.getBoolean("LimitChineseID", resourceConfig.getBoolean("LimitChineseID"));
+            BedrockLoginBypass = config.getBoolean("BedrockLoginBypass", resourceConfig.getBoolean("BedrockLoginBypass"));
             MinLengthID = config.getInt("MinLengthID", resourceConfig.getInt("MinLengthID"));
             MaxLengthID = config.getInt("MaxLengthID", resourceConfig.getInt("MaxLengthID"));
             BeforeLoginNoDamage = config.getBoolean("BeforeLoginNoDamage", resourceConfig.getBoolean("BeforeLoginNoDamage"));
@@ -118,6 +120,7 @@ public class Config {
             config.set("IpCountLimit", IpCountLimit);
             config.set("SpawnWorld", null);
             config.set("LimitChineseID", LimitChineseID);
+            config.set("BedrockLoginBypass",BedrockLoginBypass);
             config.set("MinLengthID", MinLengthID);
             config.set("MaxLengthID", MaxLengthID);
             config.set("BeforeLoginNoDamage", BeforeLoginNoDamage);
@@ -169,6 +172,7 @@ public class Config {
         public static String CHANGEPASSWORD_SUCCESS;
         public static String AUTO_KICK;
         public static String REGISTER_MORE;
+        public static String BEDROCK_LOGIN_BYPASS;
 
         public static void load(){
             FileConfiguration resourceConfig = getResourceConfig("language.yml");
