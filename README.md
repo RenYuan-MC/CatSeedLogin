@@ -68,6 +68,8 @@
 * /catseedlogin setAutoKick 秒数
 ### 打开/关闭 限制中文游戏名 (默认打开)
 * /catseedlogin limitChineseID
+### 打开/关闭 基岩版登录跳过 (默认打开)
+* /catseedlogin bedrockLoginBypass
 ### 打开/关闭 登陆之前是否受到伤害 (默认登陆之前不受到伤害)
 * /catseedlogin beforeLoginNoDamage
 ### 打开/关闭 登陆之后是否返回退出地点 (默认打开)
@@ -94,6 +96,8 @@ IpCountLimit: 2
 SpawnLocation: 世界名:x轴:y轴:z轴:yaw:pitch  
 \#是否限制中文ID  
 LimitChineseID: true  
+\#是否跳过基岩版登录  
+BedrockLoginBypass: true  
 \#游戏ID最小长度  
 MinLengthID: 2  
 \#游戏ID最大长度  
