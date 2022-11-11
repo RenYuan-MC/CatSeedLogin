@@ -85,6 +85,7 @@ public class Config {
         public static int AutoKick;
         // 死亡状态退出游戏是否记录退出位置 (玩家可以通过死亡时退出服务器然后重新进入，再复活，登录返回死亡地点)
         public static boolean DeathStateQuitRecordLocation;
+        public static boolean FloodgatePrefixProtect;
 
         public static void load(){
             FileConfiguration config = getConfig("settings.yml");
@@ -109,8 +110,7 @@ public class Config {
             AutoKick = config.getInt("AutoKick", 120);
             SpawnLocation = str2Location(config.getString("SpawnLocation"));
             DeathStateQuitRecordLocation = config.getBoolean("DeathStateQuitRecordLocation", resourceConfig.getBoolean("DeathStateQuitRecordLocation"));
-
-
+            FloodgatePrefixProtect = config.getBoolean("FloodgatePrefixProtect", resourceConfig.getBoolean("FloodgatePrefixProtect"));
         }
 
         public static void save(){
@@ -130,6 +130,7 @@ public class Config {
             config.set("SpawnLocation", loc2String(SpawnLocation));
             config.set("CommandWhiteList", CommandWhiteList.stream().map(Pattern::toString).collect(Collectors.toList()));
             config.set("DeathStateQuitRecordLocation", DeathStateQuitRecordLocation);
+            config.set("FloodgatePrefixProtect", FloodgatePrefixProtect);
             try {
                 config.save(new File(CatSeedLogin.instance.getDataFolder(), "settings.yml"));
             } catch (IOException e) {
