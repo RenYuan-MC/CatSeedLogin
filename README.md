@@ -19,7 +19,7 @@
 *  支持bc端在没有登录时，禁止切换子服，登录后切换子服保持登录
 *  在安装floodgate时为基岩版玩家跳过登录
 ## 下载
-*  https://github.com/CatSeed/CatSeedLogin/tags
+*  https://github.com/RenYuan-MC/CatSeedLogin/releases
 ## 使用方式
 #### 如果是正常使用：
 * 插件放入plugins文件夹重启服务器
