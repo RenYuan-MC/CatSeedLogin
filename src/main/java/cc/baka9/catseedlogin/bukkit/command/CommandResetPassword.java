@@ -1,5 +1,6 @@
 package cc.baka9.catseedlogin.bukkit.command;
 
+import cc.baka9.catseedlogin.bukkit.CatScheduler;
 import cc.baka9.catseedlogin.bukkit.CatSeedLogin;
 import cc.baka9.catseedlogin.bukkit.Config;
 import cc.baka9.catseedlogin.bukkit.database.Cache;
@@ -87,12 +88,12 @@ public class CommandResetPassword implements CommandExecutor {
                                 CatSeedLogin.sql.edit(lp);
                                 LoginPlayerHelper.remove(lp);
                                 EmailCode.removeByName(name, EmailCode.Type.ResetPassword);
-                                Bukkit.getScheduler().runTask(CatSeedLogin.instance, () -> {
+                                CatScheduler.runTask(() -> {
                                     Player p = Bukkit.getPlayer(lp.getName());
                                     if (p != null && p.isOnline()) {
                                         if (Config.Settings.CanTpSpawnLocation) {
-//                                            PlayerTeleport.teleport(p, Config.Settings.SpawnLocation);
-                                            p.teleport(Config.Settings.SpawnLocation);
+                                            // PlayerTeleport.teleport(p, Config.Settings.SpawnLocation);
+                                            CatScheduler.teleport(p,Config.Settings.SpawnLocation);
                                         }
                                         p.sendMessage(Config.Language.RESETPASSWORD_SUCCESS);
                                         if (CatSeedLogin.loadProtocolLib) {
@@ -102,7 +103,7 @@ public class CommandResetPassword implements CommandExecutor {
 
                                 });
                             } catch (Exception e) {
-                                Bukkit.getScheduler().runTask(CatSeedLogin.instance, () -> sender.sendMessage("§c数据库异常!"));
+                                CatScheduler.runTask( () -> sender.sendMessage("§c数据库异常!"));
                                 e.printStackTrace();
                             }
 
