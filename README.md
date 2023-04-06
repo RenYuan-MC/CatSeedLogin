@@ -1,8 +1,8 @@
 # CatSeedLogin 猫种子登陆
 > 插件在Spigot API 1.13.2环境下开发的， 理论上应该支持1.7 ~ 1.18.1 一般都是低版本向上兼容。
 ## 关于此Fork:
-* 此 Fork 修复了 CatSeedLogin 的一些问题,添加了基岩版兼容
-* 并且合并了几个未合并的 Pull requests [#19](https://github.com/CatSeed/CatSeedLogin/pull/19) [#18](https://github.com/CatSeed/CatSeedLogin/pull/18)
+* 此 Fork 优化了 CatSeedLogin 的一些问题,添加了基岩版兼容和Folia支持
+* 合并了两个额外的 Pull requests [#19](https://github.com/CatSeed/CatSeedLogin/pull/19) [#18](https://github.com/CatSeed/CatSeedLogin/pull/18)
 ## 基础功能:
 *  注册 登录 修改密码 管理员设置密码
 *  防止英文id大小写登录bug
@@ -17,6 +17,7 @@
 *  进入游戏时游戏名的限制（由数字,字母和下划线组成 “可配置”长度的游戏名才能进入）
 *  绑定邮箱，邮箱重置密码功能
 *  支持bc端在没有登录时，禁止切换子服，登录后切换子服保持登录
+*  在安装floodgate时为基岩版玩家跳过登录
 ## 下载
 *  https://github.com/CatSeed/CatSeedLogin/tags
 ## 使用方式
