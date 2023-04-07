@@ -20,15 +20,20 @@ public class LoginPlayer {
     private String ips;
     private long lastAction;
 
+    public LoginPlayer(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LoginPlayer that = (LoginPlayer) o;
         return Objects.equals(name, that.name);
     }
 
-    public List<String> getIpsList(){
+    public List<String> getIpsList() {
         List<String> ipList = new ArrayList<>();
         if (this.ips != null) {
             ipList.addAll(Arrays.asList(this.ips.split(";")));
@@ -37,16 +42,11 @@ public class LoginPlayer {
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Objects.hash(name);
     }
 
-    public LoginPlayer(String name, String password){
-        this.name = name;
-        this.password = password;
-    }
-
-    public void crypt(){
+    public void crypt() {
         password = Crypt.encrypt(name, password);
     }
 

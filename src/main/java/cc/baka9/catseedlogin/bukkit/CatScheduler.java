@@ -15,19 +15,12 @@ import java.util.function.Consumer;
 
 public class CatScheduler {
 
+    // from cc.baka9.catseedlogin.bukkit.task.Task
+    private static final List<BukkitTask> bukkitTaskList = new ArrayList<>();
+    // not type-safe
+    private static final List<Object> foliaTaskList = new ArrayList<>();
     // folia check
     public static boolean folia = isFolia();
-    public static boolean isFolia(){
-        try {
-            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
-            Class.forName("io.papermc.paper.threadedregions.RegionizedServerInitEvent");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
-
     private static Object asyncScheduler;
     private static Object globalRegionScheduler;
     private static Method runNow;
@@ -38,10 +31,9 @@ public class CatScheduler {
     private static Method teleportAsync;
     private static Class<?> scheduledTask;
 
-
     static {
         // init reflect for folia
-        if (folia){
+        if (folia) {
             try {
 
                 // folia scheduler
@@ -66,7 +58,8 @@ public class CatScheduler {
                 // folia async teleport
                 teleportAsync = Player.class.getMethod("teleportAsync", Location.class);
 
-            } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+            } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException |
+                     InvocationTargetException e) {
                 e.printStackTrace();
                 folia = false;
             }
@@ -74,23 +67,32 @@ public class CatScheduler {
         }
     }
 
+    public static boolean isFolia() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServerInitEvent");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     // just teleport (for folia support)
-    public static void teleport(Player player, Location location){
+    public static void teleport(Player player, Location location) {
         if (folia) {
             try {
-                teleportAsync.invoke(player,location);
+                teleportAsync.invoke(player, location);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         } else player.teleport(location);
     }
 
-
     // for cc.baka9.catseedlogin.bukkit.CatSeedLogin#runTaskAsync
-    public static void runTaskAsync(Runnable runnable){
-        if (folia){
+    public static void runTaskAsync(Runnable runnable) {
+        if (folia) {
             try {
-                runNow.invoke(asyncScheduler,CatSeedLogin.instance, (Consumer<?>) task -> runnable.run());
+                runNow.invoke(asyncScheduler, CatSeedLogin.instance, (Consumer<?>) task -> runnable.run());
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
@@ -99,17 +101,11 @@ public class CatScheduler {
         }
     }
 
-    // from cc.baka9.catseedlogin.bukkit.task.Task
-    private static final List<BukkitTask> bukkitTaskList = new ArrayList<>();
-
-    // not type-safe
-    private static final List<Object> foliaTaskList = new ArrayList<>();
-
     // for cc.baka9.catseedlogin.bukkit.task.Task#runTaskTimer
-    public static void runTaskTimer(Runnable runnable, long l){
-        if (folia){
+    public static void runTaskTimer(Runnable runnable, long l) {
+        if (folia) {
             try {
-                foliaTaskList.add(runAtFixedRate.invoke(globalRegionScheduler,CatSeedLogin.instance, (Consumer<?>) task -> runnable.run(), 1, l));
+                foliaTaskList.add(runAtFixedRate.invoke(globalRegionScheduler, CatSeedLogin.instance, (Consumer<?>) task -> runnable.run(), 1, l));
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
@@ -119,8 +115,8 @@ public class CatScheduler {
     }
 
     // for cc.baka9.catseedlogin.bukkit.task.Task#cancelAll
-    public static void cancelAll(){
-        if(folia){
+    public static void cancelAll() {
+        if (folia) {
             Iterator<Object> iterator = foliaTaskList.iterator();
             while (iterator.hasNext()) {
                 Object task = iterator.next();
@@ -141,10 +137,10 @@ public class CatScheduler {
     }
 
     // for all codes that use org.bukkit.scheduler.BukkitScheduler#runTask
-    public static void runTask(Runnable runnable){
-        if (folia){
+    public static void runTask(Runnable runnable) {
+        if (folia) {
             try {
-                run.invoke(globalRegionScheduler,CatSeedLogin.instance, (Consumer<?>) task -> runnable.run());
+                run.invoke(globalRegionScheduler, CatSeedLogin.instance, (Consumer<?>) task -> runnable.run());
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
@@ -154,10 +150,10 @@ public class CatScheduler {
     }
 
     // for all codes that use org.bukkit.scheduler.BukkitScheduler#runTaskLater
-    public static void runTaskLater(Runnable runnable, long l){
+    public static void runTaskLater(Runnable runnable, long l) {
         if (folia) {
             try {
-                runDelayed.invoke(globalRegionScheduler,CatSeedLogin.instance, (Consumer<?>) task -> runnable.run(), l);
+                runDelayed.invoke(globalRegionScheduler, CatSeedLogin.instance, (Consumer<?>) task -> runnable.run(), l);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }

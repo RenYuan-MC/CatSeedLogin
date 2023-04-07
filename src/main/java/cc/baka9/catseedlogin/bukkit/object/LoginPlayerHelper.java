@@ -15,11 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LoginPlayerHelper {
@@ -56,7 +52,7 @@ public class LoginPlayerHelper {
 
     public static boolean isLogin(String name) {
         synchronized (set) {
-            if (Config.Settings.BedrockLoginBypass && isFloodgatePlayer(name)){
+            if (Config.Settings.BedrockLoginBypass && isFloodgatePlayer(name)) {
                 return true;
             }
             for (LoginPlayer lp : set) {
@@ -69,7 +65,7 @@ public class LoginPlayerHelper {
     }
 
     public static boolean isRegister(String name) {
-        if (Config.Settings.BedrockLoginBypass && isFloodgatePlayer(name)){
+        if (Config.Settings.BedrockLoginBypass && isFloodgatePlayer(name)) {
             return true;
         }
         return Cache.getIgnoreCase(name) != null;

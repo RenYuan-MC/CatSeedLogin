@@ -23,7 +23,7 @@ public class CatSeedLogin extends JavaPlugin {
     public static boolean folia = CatScheduler.folia;
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
         instance = this;
         if (folia) getLogger().warning("检测到Folia,注意目前版本对Folia的支持还不稳定！");
         //Config
@@ -32,7 +32,7 @@ public class CatSeedLogin extends JavaPlugin {
             Config.save();
         } catch (Exception e) {
             e.printStackTrace();
-            getServer().getLogger().warning("加载配置文件时出错，请检查你的配置文件。");
+            getLogger().warning("加载配置文件时出错，请检查你的配置文件。");
         }
         sql = Config.MySQL.Enable ? new MySQL(this) : new SQLite(this);
         try {
@@ -45,7 +45,7 @@ public class CatSeedLogin extends JavaPlugin {
             e.printStackTrace();
         }
         //Listeners
-        getServer().getPluginManager().registerEvents(new Listeners(), this);
+        Bukkit.getPluginManager().registerEvents(new Listeners(), this);
 
         //ProtocolLibListeners
         try {
@@ -62,24 +62,21 @@ public class CatSeedLogin extends JavaPlugin {
         }
 
         // Floodgate
-        if (Bukkit.getPluginManager().getPlugin("floodgate") != null && Config.Settings.BedrockLoginBypass){
+        if (Bukkit.getPluginManager().getPlugin("floodgate") != null && Config.Settings.BedrockLoginBypass) {
             getLogger().info("检测到floodgate，基岩版兼容已装载");
         }
 
         //Commands
-        getServer().getPluginCommand("login").setExecutor(new CommandLogin());
-        getServer().getPluginCommand("login").setTabCompleter((commandSender, command, s, args)
-                -> args.length == 1 ? Collections.singletonList("密码") : new ArrayList<>(0));
+        getCommand("login").setExecutor(new CommandLogin());
+        getCommand("login").setTabCompleter((commandSender, command, s, args) -> args.length == 1 ? Collections.singletonList("密码") : new ArrayList<>(0));
 
-        getServer().getPluginCommand("register").setExecutor(new CommandRegister());
-        getServer().getPluginCommand("register").setTabCompleter((commandSender, command, s, args)
-                -> args.length == 1 ? Collections.singletonList("密码 重复密码") : new ArrayList<>(0));
+        getCommand("register").setExecutor(new CommandRegister());
+        getCommand("register").setTabCompleter((commandSender, command, s, args) -> args.length == 1 ? Collections.singletonList("密码 重复密码") : new ArrayList<>(0));
 
-        getServer().getPluginCommand("changepassword").setExecutor(new CommandChangePassword());
-        getServer().getPluginCommand("changepassword").setTabCompleter((commandSender, command, s, args)
-                -> args.length == 1 ? Collections.singletonList("旧密码 新密码 重复新密码") : new ArrayList<>(0));
+        getCommand("changepassword").setExecutor(new CommandChangePassword());
+        getCommand("changepassword").setTabCompleter((commandSender, command, s, args) -> args.length == 1 ? Collections.singletonList("旧密码 新密码 重复新密码") : new ArrayList<>(0));
 
-        PluginCommand bindemail = getServer().getPluginCommand("bindemail");
+        PluginCommand bindemail = getCommand("bindemail");
         bindemail.setExecutor(new CommandBindEmail());
         bindemail.setTabCompleter((commandSender, command, s, args) -> {
             if (args.length == 1) {
@@ -95,7 +92,7 @@ public class CatSeedLogin extends JavaPlugin {
             }
             return Collections.emptyList();
         });
-        PluginCommand resetpassword = getServer().getPluginCommand("resetpassword");
+        PluginCommand resetpassword = getCommand("resetpassword");
         resetpassword.setExecutor(new CommandResetPassword());
         resetpassword.setTabCompleter((commandSender, command, s, args) -> {
             if (args.length == 1) {
@@ -111,7 +108,7 @@ public class CatSeedLogin extends JavaPlugin {
             }
             return Collections.emptyList();
         });
-        PluginCommand catseedlogin = getServer().getPluginCommand("catseedlogin");
+        PluginCommand catseedlogin = getCommand("catseedlogin");
         catseedlogin.setExecutor(new CommandCatSeedLogin());
 
         //Task
@@ -121,7 +118,7 @@ public class CatSeedLogin extends JavaPlugin {
 
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         Task.cancelAll();
         Bukkit.getOnlinePlayers().forEach(p -> {
             if (!LoginPlayerHelper.isLogin(p.getName())) return;
@@ -140,7 +137,7 @@ public class CatSeedLogin extends JavaPlugin {
         super.onDisable();
     }
 
-    public void runTaskAsync(Runnable runnable){
+    public void runTaskAsync(Runnable runnable) {
         CatScheduler.runTaskAsync(runnable);
     }
 

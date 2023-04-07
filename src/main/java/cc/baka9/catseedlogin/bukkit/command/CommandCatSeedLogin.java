@@ -22,28 +22,11 @@ import java.util.stream.Collectors;
 
 public class CommandCatSeedLogin implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String lable, String[] args){
-        return reload(sender, args)
-                || setPwd(sender, args)
-                || delPlayer(sender, args)
-                || setIpCountLimit(sender, args)
-                || limitChineseID(sender, args)
-                || bedrockLoginBypass(sender, args)
-                || setIdLength(sender, args)
-                || beforeLoginNoDamage(sender, args)
-                || setReenterInterval(sender, args)
-                || afterLoginBack(sender, args)
-                || setSpawnLocation(sender, args)
-                || commandWhiteListInfo(sender, args)
-                || commandWhiteListAdd(sender, args)
-                || commandWhiteListDel(sender, args)
-                || canTpSpawnLocation(sender, args)
-                || autoKick(sender, args)
-                || setIpRegCountLimit(sender, args)
-                || deathStateQuitRecordLocation(sender, args);
+    public boolean onCommand(CommandSender sender, Command command, String lable, String[] args) {
+        return reload(sender, args) || setPwd(sender, args) || delPlayer(sender, args) || setIpCountLimit(sender, args) || limitChineseID(sender, args) || bedrockLoginBypass(sender, args) || setIdLength(sender, args) || beforeLoginNoDamage(sender, args) || setReenterInterval(sender, args) || afterLoginBack(sender, args) || setSpawnLocation(sender, args) || commandWhiteListInfo(sender, args) || commandWhiteListAdd(sender, args) || commandWhiteListDel(sender, args) || canTpSpawnLocation(sender, args) || autoKick(sender, args) || setIpRegCountLimit(sender, args) || deathStateQuitRecordLocation(sender, args);
     }
 
-    private boolean deathStateQuitRecordLocation(CommandSender sender, String[] args){
+    private boolean deathStateQuitRecordLocation(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("deathStateQuitRecordLocation")) {
             Config.Settings.DeathStateQuitRecordLocation = !Config.Settings.DeathStateQuitRecordLocation;
             Config.Settings.save();
@@ -53,7 +36,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean autoKick(CommandSender sender, String[] args){
+    private boolean autoKick(CommandSender sender, String[] args) {
         if (args.length > 1 && args[0].equalsIgnoreCase("setAutoKick")) {
             try {
 
@@ -68,7 +51,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean canTpSpawnLocation(CommandSender sender, String[] args){
+    private boolean canTpSpawnLocation(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("canTpSpawnLocation")) {
             Config.Settings.CanTpSpawnLocation = !Config.Settings.CanTpSpawnLocation;
             Config.Settings.save();
@@ -78,7 +61,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean commandWhiteListDel(CommandSender sender, String[] args){
+    private boolean commandWhiteListDel(CommandSender sender, String[] args) {
         if (args.length > 1 && args[0].equalsIgnoreCase("commandWhiteListDel")) {
             String[] cmd = new String[args.length - 1];
             System.arraycopy(args, 1, cmd, 0, cmd.length);
@@ -97,7 +80,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean commandWhiteListAdd(CommandSender sender, String[] args){
+    private boolean commandWhiteListAdd(CommandSender sender, String[] args) {
         if (args.length > 1 && args[0].equalsIgnoreCase("commandWhiteListAdd")) {
             String[] cmd = new String[args.length - 1];
             System.arraycopy(args, 1, cmd, 0, cmd.length);
@@ -116,7 +99,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean commandWhiteListInfo(CommandSender sender, String[] args){
+    private boolean commandWhiteListInfo(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("commandWhiteListInfo")) {
             sender.sendMessage("§e登录前可执行指令: ");
             Config.Settings.CommandWhiteList.forEach(cmdRegex -> sender.sendMessage(cmdRegex.toString()));
@@ -125,7 +108,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean setSpawnLocation(CommandSender sender, String[] args){
+    private boolean setSpawnLocation(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("setSpawnLocation")) {
             if (sender instanceof Player) {
                 Config.Settings.SpawnLocation = ((Player) sender).getLocation();
@@ -139,7 +122,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean afterLoginBack(CommandSender sender, String[] args){
+    private boolean afterLoginBack(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("afterLoginBack")) {
             Config.Settings.AfterLoginBack = !Config.Settings.AfterLoginBack;
             Config.Settings.save();
@@ -149,10 +132,10 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean setReenterInterval(CommandSender sender, String[] args){
+    private boolean setReenterInterval(CommandSender sender, String[] args) {
         if (args.length > 1 && args[0].equalsIgnoreCase("setReenterInterval")) {
             try {
-                Config.Settings.ReenterInterval = Long.valueOf(args[1]);
+                Config.Settings.ReenterInterval = Long.parseLong(args[1]);
                 Config.Settings.save();
                 sender.sendMessage("§e离开服务器重新进入的间隔限制 " + Config.Settings.ReenterInterval + "tick");
 
@@ -166,7 +149,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
 
     }
 
-    private boolean beforeLoginNoDamage(CommandSender sender, String[] args){
+    private boolean beforeLoginNoDamage(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("beforeLoginNoDamage")) {
             Config.Settings.BeforeLoginNoDamage = !Config.Settings.BeforeLoginNoDamage;
             Config.Settings.save();
@@ -177,12 +160,12 @@ public class CommandCatSeedLogin implements CommandExecutor {
 
     }
 
-    private boolean setIdLength(CommandSender sender, String[] args){
+    private boolean setIdLength(CommandSender sender, String[] args) {
         if (args.length > 2 && args[0].equalsIgnoreCase("setIdLength")) {
 
             try {
-                Config.Settings.MinLengthID = Integer.valueOf(args[1]);
-                Config.Settings.MaxLengthID = Integer.valueOf(args[2]);
+                Config.Settings.MinLengthID = Integer.parseInt(args[1]);
+                Config.Settings.MaxLengthID = Integer.parseInt(args[2]);
                 Config.Settings.save();
                 sender.sendMessage("§e游戏名最小和最大长度为 " + Config.Settings.MinLengthID + " ~ " + Config.Settings.MaxLengthID);
             } catch (NumberFormatException e) {
@@ -194,7 +177,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
 
     }
 
-    private boolean limitChineseID(CommandSender sender, String[] args){
+    private boolean limitChineseID(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("limitChineseID")) {
             Config.Settings.LimitChineseID = !Config.Settings.LimitChineseID;
             Config.Settings.save();
@@ -204,7 +187,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean bedrockLoginBypass(CommandSender sender, String[] args){
+    private boolean bedrockLoginBypass(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("bedrockLoginBypass")) {
             Config.Settings.BedrockLoginBypass = !Config.Settings.BedrockLoginBypass;
             Config.Settings.save();
@@ -214,10 +197,10 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean setIpCountLimit(CommandSender sender, String[] args){
+    private boolean setIpCountLimit(CommandSender sender, String[] args) {
         if (args.length > 1 && args[0].equalsIgnoreCase("setIpCountLimit")) {
             try {
-                Config.Settings.IpCountLimit = Integer.valueOf(args[1]);
+                Config.Settings.IpCountLimit = Integer.parseInt(args[1]);
                 Config.Settings.save();
                 sender.sendMessage("§e相同ip登录限制数量为 " + Config.Settings.IpCountLimit);
             } catch (NumberFormatException e) {
@@ -228,10 +211,10 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean setIpRegCountLimit(CommandSender sender, String[] args){
+    private boolean setIpRegCountLimit(CommandSender sender, String[] args) {
         if (args.length > 1 && args[0].equalsIgnoreCase("setIpRegCountLimit")) {
             try {
-                Config.Settings.IpRegisterCountLimit = Integer.valueOf(args[1]);
+                Config.Settings.IpRegisterCountLimit = Integer.parseInt(args[1]);
                 Config.Settings.save();
                 sender.sendMessage("§e相同ip注册限制数量为 " + Config.Settings.IpRegisterCountLimit);
             } catch (NumberFormatException e) {
@@ -242,7 +225,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean delPlayer(CommandSender sender, String[] args){
+    private boolean delPlayer(CommandSender sender, String[] args) {
         if (args.length > 1 && args[0].equalsIgnoreCase("delplayer")) {
 
             String name = args[1];
@@ -276,7 +259,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean setPwd(CommandSender sender, String[] args){
+    private boolean setPwd(CommandSender sender, String[] args) {
         if (args.length > 2 && args[0].equalsIgnoreCase("setpwd")) {
 
             String name = args[1], pwd = args[2];
@@ -305,7 +288,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
                         LoginPlayerHelper.remove(lp);
                         sender.sendMessage(String.join(" ", "§a玩家", lp.getName(), "密码已设置"));
                         LoginPlayer finalLp = lp;
-                        CatScheduler.runTask( () -> {
+                        CatScheduler.runTask(() -> {
                             Player p = Bukkit.getPlayer(finalLp.getName());
                             if (p != null && p.isOnline()) {
                                 p.sendMessage("§c密码已被管理员重新设置,请重新登录");
@@ -332,7 +315,7 @@ public class CommandCatSeedLogin implements CommandExecutor {
         return false;
     }
 
-    private boolean reload(CommandSender sender, String[] args){
+    private boolean reload(CommandSender sender, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             Config.reload();
             CatSeedLogin.sql = Config.MySQL.Enable ? new MySQL(CatSeedLogin.instance) : new SQLite(CatSeedLogin.instance);

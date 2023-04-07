@@ -9,13 +9,13 @@ import java.sql.SQLException;
 public class SQLite extends SQL {
     private Connection connection;
 
-    public SQLite(JavaPlugin javaPlugin){
+    public SQLite(JavaPlugin javaPlugin) {
         super(javaPlugin);
     }
 
 
     @Override
-    public Connection getConnection() throws SQLException{
+    public Connection getConnection() throws SQLException {
 
         if (this.connection != null && !this.connection.isClosed()) {
             return this.connection;
@@ -30,7 +30,7 @@ public class SQLite extends SQL {
                 return null;
             }
         } else {
-            final boolean mkdir = plugin.getDataFolder().mkdir();
+            plugin.getDataFolder().mkdir();
             return this.getConnection();
         }
     }

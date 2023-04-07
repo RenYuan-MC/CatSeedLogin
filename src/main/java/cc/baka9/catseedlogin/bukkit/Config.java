@@ -25,8 +25,118 @@ import java.util.stream.Collectors;
  * sql.yml 数据库
  */
 public class Config {
-    private static CatSeedLogin plugin = CatSeedLogin.instance;
-    private static Map<String, String> offlineLocations = new HashMap<>();
+    private static final CatSeedLogin plugin = CatSeedLogin.instance;
+    private static final Map<String, String> offlineLocations = new HashMap<>();
+
+    // 获取插件文件夹中的配置文件，如果不存在则从插件jar包中获取配置文件保存到插件文件夹中
+    public static FileConfiguration getConfig(String yamlFileName) {
+        File file = new File(plugin.getDataFolder(), yamlFileName);
+        if (!file.exists()) {
+            plugin.saveResource(yamlFileName, false);
+        }
+        return YamlConfiguration.loadConfiguration(file);
+    }
+
+    // 获取插件jar包中的配置文件
+    public static FileConfiguration getResourceConfig(String yamlFileName) {
+        return YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(yamlFileName), StandardCharsets.UTF_8));
+    }
+
+    public static void load() {
+        plugin.saveDefaultConfig();
+        FileConfiguration config = plugin.getConfig();
+        if (config.contains("offlineLocations")) {
+            config.getConfigurationSection("offlineLocations").getKeys(false).forEach(key -> offlineLocations.put(key, config.getString("offlineLocations." + key)));
+        }
+        MySQL.load();
+        Settings.load();
+        EmailVerify.load();
+        Language.load();
+        BungeeCord.load();
+    }
+
+    public static void save() {
+        Settings.save();
+    }
+
+    public static void reload() {
+        plugin.reloadConfig();
+        load();
+
+    }
+
+    // 获取玩家退出服务器时的位置
+    public static Optional<Location> getOfflineLocation(Player player) {
+        String data = offlineLocations.get(player.getName());
+        return data == null ? Optional.empty() : Optional.of(str2Location(data));
+    }
+
+    // 保存玩家退出服务器的位置
+    public static void setOfflineLocation(Player player) {
+        String name = player.getName();
+        String data = loc2String(player.getLocation());
+        offlineLocations.put(name, data);
+        plugin.getConfig().set("offlineLocations." + name, data);
+        plugin.saveConfig();
+    }
+
+    // 字符串转成位置
+    private static Location str2Location(String str) {
+        Location loc;
+        try {
+            String[] locStrs = str.split(":");
+            World world = Bukkit.getWorld(locStrs[0]);
+            double x = Double.parseDouble(locStrs[1]);
+            double y = Double.parseDouble(locStrs[2]);
+            double z = Double.parseDouble(locStrs[3]);
+            float yaw = fixYaw(Float.parseFloat(locStrs[4]));
+            float pitch = fixPitch(Float.parseFloat(locStrs[5]));
+            loc = new Location(world, x, y, z, yaw, pitch);
+        } catch (Exception ignored) {
+            loc = getDefaultWorld().getSpawnLocation();
+        }
+        return loc;
+
+    }
+
+    // 位置转成字符串
+    private static String loc2String(Location loc) {
+        loc.setYaw(fixYaw(loc.getYaw()));
+        loc.setPitch(fixPitch(loc.getPitch()));
+        try {
+            return loc.getWorld().getName() + ":" + loc.getX() + ":" + loc.getY() + ":" + loc.getZ() + ":" + loc.getYaw() + ":" + loc.getPitch();
+        } catch (Exception ignored) {
+            loc = getDefaultWorld().getSpawnLocation();
+        }
+        loc.setYaw(fixYaw(loc.getYaw()));
+        loc.setPitch(fixPitch(loc.getPitch()));
+        return loc.getWorld().getName() + ":" + loc.getX() + ":" + loc.getY() + ":" + loc.getZ() + ":" + loc.getYaw() + ":" + loc.getPitch();
+
+    }
+
+    // 修正Yaw数值防止崩服卡服
+    private static float fixYaw(float yaw) {
+        return yaw > 180 || yaw < -180 ? 0 : (float) (Math.round(yaw * 100)) / 100;
+    }
+
+    // 修正Pitch数值防止崩服卡服
+    private static float fixPitch(float pitch) {
+        return pitch > 90 || pitch < -90 ? 0 : (float) (Math.round(pitch * 100)) / 100;
+    }
+
+    // 获取默认世界
+    private static World getDefaultWorld() {
+        try (InputStream is = new BufferedInputStream(Files.newInputStream(new File("server.properties").toPath()))) {
+            Properties properties = new Properties();
+            properties.load(is);
+            String worldName = properties.getProperty("level-name");
+            return Bukkit.getWorld(worldName);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Bukkit.getWorlds().get(0);
+    }
 
     /**
      * 数据库
@@ -39,7 +149,7 @@ public class Config {
         public static String User;
         public static String Password;
 
-        public static void load(){
+        public static void load() {
             FileConfiguration config = getConfig("sql.yml");
             MySQL.Enable = config.getBoolean("MySQL.Enable");
             MySQL.Host = config.getString("MySQL.Host");
@@ -56,7 +166,7 @@ public class Config {
         public static String Port;
         public static String AuthKey;
 
-        public static void load(){
+        public static void load() {
 
             FileConfiguration config = getConfig("bungeecord.yml");
             BungeeCord.Enable = config.getBoolean("Enable");
@@ -87,7 +197,7 @@ public class Config {
         public static boolean DeathStateQuitRecordLocation;
         public static boolean FloodgatePrefixProtect;
 
-        public static void load(){
+        public static void load() {
             FileConfiguration config = getConfig("settings.yml");
             FileConfiguration resourceConfig = getResourceConfig("settings.yml");
 
@@ -113,13 +223,13 @@ public class Config {
             FloodgatePrefixProtect = config.getBoolean("FloodgatePrefixProtect", resourceConfig.getBoolean("FloodgatePrefixProtect"));
         }
 
-        public static void save(){
+        public static void save() {
             FileConfiguration config = getConfig("settings.yml");
             config.set("IpRegisterCountLimit", IpRegisterCountLimit);
             config.set("IpCountLimit", IpCountLimit);
             config.set("SpawnWorld", null);
             config.set("LimitChineseID", LimitChineseID);
-            config.set("BedrockLoginBypass",BedrockLoginBypass);
+            config.set("BedrockLoginBypass", BedrockLoginBypass);
             config.set("MinLengthID", MinLengthID);
             config.set("MaxLengthID", MaxLengthID);
             config.set("BeforeLoginNoDamage", BeforeLoginNoDamage);
@@ -174,7 +284,7 @@ public class Config {
         public static String REGISTER_MORE;
         public static String BEDROCK_LOGIN_BYPASS;
 
-        public static void load(){
+        public static void load() {
             FileConfiguration resourceConfig = getResourceConfig("language.yml");
             FileConfiguration config = getConfig("language.yml");
             for (Field field : Language.class.getDeclaredFields()) {
@@ -204,7 +314,7 @@ public class Config {
         public static String FromPersonal;
 
 
-        public static void load(){
+        public static void load() {
             FileConfiguration config = getConfig("emailVerify.yml");
             Enable = config.getBoolean("Enable");
             EmailAccount = config.getString("EmailAccount");
@@ -216,116 +326,6 @@ public class Config {
 
         }
 
-    }
-    // 获取插件文件夹中的配置文件，如果不存在则从插件jar包中获取配置文件保存到插件文件夹中
-    public static FileConfiguration getConfig(String yamlFileName){
-        File file = new File(plugin.getDataFolder(), yamlFileName);
-        if (!file.exists()) {
-            plugin.saveResource(yamlFileName, false);
-        }
-        return YamlConfiguration.loadConfiguration(file);
-    }
-
-    // 获取插件jar包中的配置文件
-    public static FileConfiguration getResourceConfig(String yamlFileName){
-        return YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(yamlFileName), StandardCharsets.UTF_8));
-    }
-
-    public static void load(){
-        plugin.saveDefaultConfig();
-        FileConfiguration config = plugin.getConfig();
-        if (config.contains("offlineLocations")) {
-            config.getConfigurationSection("offlineLocations").getKeys(false).forEach(key ->
-                    offlineLocations.put(key, config.getString("offlineLocations." + key))
-            );
-        }
-        MySQL.load();
-        Settings.load();
-        EmailVerify.load();
-        Language.load();
-        BungeeCord.load();
-    }
-
-    public static void save(){
-        Settings.save();
-    }
-
-    public static void reload(){
-        plugin.reloadConfig();
-        load();
-
-    }
-
-    // 获取玩家退出服务器时的位置
-    public static Optional<Location> getOfflineLocation(Player player){
-        String data = offlineLocations.get(player.getName());
-        return data == null ? Optional.empty() : Optional.of(str2Location(data));
-    }
-
-    // 保存玩家退出服务器的位置
-    public static void setOfflineLocation(Player player){
-        String name = player.getName();
-        String data = loc2String(player.getLocation());
-        offlineLocations.put(name, data);
-        plugin.getConfig().set("offlineLocations." + name, data);
-        plugin.saveConfig();
-    }
-
-    // 字符串转成位置
-    private static Location str2Location(String str){
-        Location loc;
-        try {
-            String[] locStrs = str.split(":");
-            World world = Bukkit.getWorld(locStrs[0]);
-            double x = Double.parseDouble(locStrs[1]);
-            double y = Double.parseDouble(locStrs[2]);
-            double z = Double.parseDouble(locStrs[3]);
-            float yaw = fixYaw(Float.parseFloat(locStrs[4]));
-            float pitch = fixPitch(Float.parseFloat(locStrs[5]));
-            loc = new Location(world, x, y, z, yaw, pitch);
-        } catch (Exception ignored) {
-            loc = getDefaultWorld().getSpawnLocation();
-        }
-        return loc;
-
-    }
-    // 位置转成字符串
-    private static String loc2String(Location loc){
-        loc.setYaw(fixYaw(loc.getYaw()));
-        loc.setPitch(fixPitch(loc.getPitch()));
-        try {
-            return loc.getWorld().getName() + ":" + loc.getX() + ":" + loc.getY() + ":" + loc.getZ() + ":" + loc.getYaw() + ":" + loc.getPitch();
-        } catch (Exception ignored) {
-            loc = getDefaultWorld().getSpawnLocation();
-        }
-        loc.setYaw(fixYaw(loc.getYaw()));
-        loc.setPitch(fixPitch(loc.getPitch()));
-        return loc.getWorld().getName() + ":" + loc.getX() + ":" + loc.getY() + ":" + loc.getZ() + ":" + loc.getYaw() + ":" + loc.getPitch();
-
-    }
-
-    // 修正Yaw数值防止崩服卡服
-    private static float fixYaw(float yaw){
-        return yaw > 180 || yaw < -180 ? 0 : (float)(Math.round(yaw * 100)) / 100;
-    }
-
-    // 修正Pitch数值防止崩服卡服
-    private static float fixPitch(float pitch){
-        return pitch > 90 || pitch < -90 ? 0 : (float)(Math.round(pitch * 100)) / 100;
-    }
-
-    // 获取默认世界
-    private static World getDefaultWorld(){
-        try (InputStream is = new BufferedInputStream(Files.newInputStream(new File("server.properties").toPath()))) {
-            Properties properties = new Properties();
-            properties.load(is);
-            String worldName = properties.getProperty("level-name");
-            return Bukkit.getWorld(worldName);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Bukkit.getWorlds().get(0);
     }
 
 

@@ -19,11 +19,11 @@ import java.util.Optional;
 
 public class CommandResetPassword implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args){
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (args.length == 0 || !(sender instanceof Player)) return false;
         Player player = (Player) sender;
         String name = player.getName();
-        if (Config.Settings.BedrockLoginBypass && LoginPlayerHelper.isFloodgatePlayer(player)){
+        if (Config.Settings.BedrockLoginBypass && LoginPlayerHelper.isFloodgatePlayer(player)) {
             return true;
         }
         LoginPlayer lp = Cache.getIgnoreCase(name);
@@ -50,12 +50,8 @@ public class CommandResetPassword implements CommandExecutor {
                     sender.sendMessage(Config.Language.RESETPASSWORD_EMAIL_SENDING_MESSAGE.replace("{email}", lp.getEmail()));
                     CatSeedLogin.instance.runTaskAsync(() -> {
                         try {
-                            Mail.sendMail(emailCode.getEmail(), "重置密码",
-                                    "你的验证码是 <strong>" + emailCode.getCode() + "</strong>" +
-                                            "<br/>在服务器中使用帐号 " + name + " 输入指令<strong>/resetpassword re " + emailCode.getCode() + " 新密码</strong> 来重置新密码" +
-                                            "<br/>此验证码有效期为 " + (emailCode.getDurability() / (1000 * 60)) + "分钟");
-                            Bukkit.getScheduler().runTask(CatSeedLogin.instance, () ->
-                                    sender.sendMessage(Config.Language.RESETPASSWORD_EMAIL_SENT_MESSAGE.replace("{email}", emailCode.getEmail())));
+                            Mail.sendMail(emailCode.getEmail(), "重置密码", "你的验证码是 <strong>" + emailCode.getCode() + "</strong>" + "<br/>在服务器中使用帐号 " + name + " 输入指令<strong>/resetpassword re " + emailCode.getCode() + " 新密码</strong> 来重置新密码" + "<br/>此验证码有效期为 " + (emailCode.getDurability() / (1000 * 60)) + "分钟");
+                            Bukkit.getScheduler().runTask(CatSeedLogin.instance, () -> sender.sendMessage(Config.Language.RESETPASSWORD_EMAIL_SENT_MESSAGE.replace("{email}", emailCode.getEmail())));
                         } catch (Exception e) {
                             Bukkit.getScheduler().runTask(CatSeedLogin.instance, () -> sender.sendMessage(Config.Language.RESETPASSWORD_EMAIL_WARN));
                             e.printStackTrace();
@@ -93,7 +89,7 @@ public class CommandResetPassword implements CommandExecutor {
                                     if (p != null && p.isOnline()) {
                                         if (Config.Settings.CanTpSpawnLocation) {
                                             // PlayerTeleport.teleport(p, Config.Settings.SpawnLocation);
-                                            CatScheduler.teleport(p,Config.Settings.SpawnLocation);
+                                            CatScheduler.teleport(p, Config.Settings.SpawnLocation);
                                         }
                                         p.sendMessage(Config.Language.RESETPASSWORD_SUCCESS);
                                         if (CatSeedLogin.loadProtocolLib) {
@@ -103,7 +99,7 @@ public class CommandResetPassword implements CommandExecutor {
 
                                 });
                             } catch (Exception e) {
-                                CatScheduler.runTask( () -> sender.sendMessage("§c数据库异常!"));
+                                CatScheduler.runTask(() -> sender.sendMessage("§c数据库异常!"));
                                 e.printStackTrace();
                             }
 

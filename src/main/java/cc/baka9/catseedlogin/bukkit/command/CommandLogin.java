@@ -17,11 +17,11 @@ import java.util.Objects;
 
 public class CommandLogin implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String lable, String[] args){
+    public boolean onCommand(CommandSender sender, Command command, String lable, String[] args) {
         if (args.length == 0 || !(sender instanceof Player)) return false;
         Player player = (Player) sender;
         String name = player.getName();
-        if (Config.Settings.BedrockLoginBypass && LoginPlayerHelper.isFloodgatePlayer(player)){
+        if (Config.Settings.BedrockLoginBypass && LoginPlayerHelper.isFloodgatePlayer(player)) {
             return true;
         }
         if (LoginPlayerHelper.isLogin(name)) {
@@ -41,7 +41,7 @@ public class CommandLogin implements CommandExecutor {
             player.updateInventory();
             LoginPlayerHelper.recordCurrentIP(player, lp);
             if (Config.Settings.AfterLoginBack && Config.Settings.CanTpSpawnLocation) {
-                Config.getOfflineLocation(player).ifPresent(location -> CatScheduler.teleport(player,location));
+                Config.getOfflineLocation(player).ifPresent(location -> CatScheduler.teleport(player, location));
             }
         } else {
             sender.sendMessage(Config.Language.LOGIN_FAIL);

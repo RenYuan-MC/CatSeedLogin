@@ -7,23 +7,21 @@ import org.bukkit.event.HandlerList;
 
 public class CatSeedPlayerRegisterEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
+    private final Player player;
 
-    public HandlerList getHandlers(){
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList(){
-        return handlers;
-    }
-
-    public CatSeedPlayerRegisterEvent(Player player){
+    public CatSeedPlayerRegisterEvent(Player player) {
         this.player = player;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
-    private Player player;
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return player;
     }
 

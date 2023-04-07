@@ -3,11 +3,11 @@ package cc.baka9.catseedlogin.bukkit.command;
 import cc.baka9.catseedlogin.bukkit.CatScheduler;
 import cc.baka9.catseedlogin.bukkit.CatSeedLogin;
 import cc.baka9.catseedlogin.bukkit.Config;
-import cc.baka9.catseedlogin.util.Crypt;
-import cc.baka9.catseedlogin.util.Util;
 import cc.baka9.catseedlogin.bukkit.database.Cache;
 import cc.baka9.catseedlogin.bukkit.object.LoginPlayer;
 import cc.baka9.catseedlogin.bukkit.object.LoginPlayerHelper;
+import cc.baka9.catseedlogin.util.Crypt;
+import cc.baka9.catseedlogin.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,12 +18,12 @@ import java.util.Objects;
 
 public class CommandChangePassword implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String lable, String[] args){
+    public boolean onCommand(CommandSender sender, Command command, String lable, String[] args) {
         if (args.length != 3 || !(sender instanceof Player)) {
             return false;
         }
         String name = sender.getName();
-        if (Config.Settings.BedrockLoginBypass && LoginPlayerHelper.isFloodgatePlayer((Player) sender)){
+        if (Config.Settings.BedrockLoginBypass && LoginPlayerHelper.isFloodgatePlayer((Player) sender)) {
             return true;
         }
         LoginPlayer lp = Cache.getIgnoreCase(name);

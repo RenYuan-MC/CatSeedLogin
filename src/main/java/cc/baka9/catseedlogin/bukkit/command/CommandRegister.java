@@ -19,11 +19,11 @@ import java.util.List;
 public class CommandRegister implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String lable, String[] args){
+    public boolean onCommand(CommandSender sender, Command command, String lable, String[] args) {
         if (args.length != 2) return false;
         Player player = (Player) sender;
         String name = sender.getName();
-        if (Config.Settings.BedrockLoginBypass && LoginPlayerHelper.isFloodgatePlayer(player)){
+        if (Config.Settings.BedrockLoginBypass && LoginPlayerHelper.isFloodgatePlayer(player)) {
             return true;
         }
         if (LoginPlayerHelper.isLogin(name)) {
@@ -51,9 +51,7 @@ public class CommandRegister implements CommandExecutor {
                 String currentIp = player.getAddress().getAddress().getHostAddress();
                 List<LoginPlayer> LoginPlayerListlikeByIp = CatSeedLogin.sql.getLikeByIp(currentIp);
                 if (LoginPlayerListlikeByIp.size() >= Config.Settings.IpRegisterCountLimit) {
-                    sender.sendMessage(Config.Language.REGISTER_MORE
-                            .replace("{count}", String.valueOf(LoginPlayerListlikeByIp.size()))
-                            .replace("{accounts}", String.join(", ", LoginPlayerListlikeByIp.stream().map(LoginPlayer::getName).toArray(String[]::new))));
+                    sender.sendMessage(Config.Language.REGISTER_MORE.replace("{count}", String.valueOf(LoginPlayerListlikeByIp.size())).replace("{accounts}", String.join(", ", LoginPlayerListlikeByIp.stream().map(LoginPlayer::getName).toArray(String[]::new))));
                 } else {
                     LoginPlayer lp = new LoginPlayer(name, args[0]);
                     lp.crypt();
