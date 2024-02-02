@@ -6,7 +6,7 @@
 
     <groupId>cc.baka9</groupId>
     <artifactId>CatSeedLogin</artifactId>
-    <version>1.5.3-SNAPSHOT[Unofficial]</version>
+    <version>1.5.3-UNOFFICIAL</version>
 
     <name>CatSeedLogin</name>
     <url>https://www.mcbbs.net/thread-847859-1-1.html</url>
@@ -75,6 +75,11 @@
             <artifactId>mail</artifactId>
             <version>1.5.0-b01</version>
         </dependency>
+        <dependency>
+            <groupId>space.arim.morepaperlib</groupId>
+            <artifactId>morepaperlib</artifactId>
+            <version>0.4.3</version>
+        </dependency>
         <!-- Floodgate -->
         <dependency>
             <groupId>org.geysermc.floodgate</groupId>
@@ -103,6 +108,11 @@
         <repository>
             <id>opencollab-snapshot</id>
             <url>https://repo.opencollab.dev/maven-snapshots/</url>
+        </repository>
+        <!-- MorePaperLib -->
+        <repository>
+            <id>arim-mvn-lgpl3</id>
+            <url>https://mvn-repo.arim.space/lesser-gpl3/</url>
         </repository>
     </repositories>
     <build>
